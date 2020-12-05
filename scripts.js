@@ -10,36 +10,48 @@ const makePlayer = function(name, token) {
 
 const gameBoard = (function() {
     let boardArray = Array.from({length:9}, () => undefined)
-    const addMove = function(squareNumber, token) {
-        boardArray[squareNumber] = token;
+    const addMove = function(squareNumber) {
+        boardArray[squareNumber] = x;
     }
     return {
         boardArray, addMove
     }
 })()
 
+//demo players
+
 // main game controller 
 
 const gameController = (function() {
+
     const boardContainer = document.getElementById("boardContainer");
+
     const renderBoard = function(){
         console.log(gameBoard.boardArray)
-        gameBoard.boardArray.forEach(nodeMaker);
+        gameBoard.boardArray.forEach(addNode);
     }
-    const nodeMaker = function(el, index) {
+
+    const appendNodeToContainer = function(node, container, index) {
+        node.setAttribute("data-square", index);
+        node.classList.add("squareBox");
+        container.appendChild(node);
+    }
+
+    const addEvent = function(node) {
+        const selectedSquare = node.dataset.dataSquare;
+        const playerToken = 
+        node.addEventListener("click", gameBoard.addMove.bind(gameBoard, selectedSquare))
+    }
+
+    const addNode = function(el, indexInArray) {
         if (!el) {
-            console.log("here now")
             let emptyNode = document.createElement("div");
-            emptyNode.setAttribute("data-square", index);
-            emptyNode.classList.add("squareBox");
-            boardContainer.appendChild(emptyNode);
+            appendNodeToContainer(emptyNode, boardContainer, indexInArray)
         }
         else {
             let filledNode = document.createElement("div");
-            filledNode.setAttribute("data-square", index);
-            filledNode.classList.add("squareBox")
             filledNode.textContent = el;
-            filledNode.appendChild(filledNode);
+            appendNodeToContainer(filledNode, boardContainer, indexInArray);
         }
 
     }
@@ -47,3 +59,4 @@ const gameController = (function() {
 })()
 
 gameController.renderBoard()
+

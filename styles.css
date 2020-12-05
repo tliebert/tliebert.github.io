@@ -1,5 +1,6 @@
 .squareBox {
     background-color: red;
+    font-size: 50px;
 }
 
 .boardGrid {
@@ -8,8 +9,9 @@
     grid-column-gap: 1px;
     grid-row-gap: 5px;
     width: 50vw;
-    height: 50vh;
+    height: 50vw;
     border-color: black;
     border-style: solid;
     border-width: 2px;
 }
+
