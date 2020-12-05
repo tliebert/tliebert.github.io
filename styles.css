@@ -1,0 +1,15 @@
+.squareBox {
+    background-color: red;
+}
+
+.boardGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 1px;
+    grid-row-gap: 5px;
+    width: 50vw;
+    height: 50vh;
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
+}
