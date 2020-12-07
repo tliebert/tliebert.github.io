@@ -34,6 +34,13 @@ const gameBoard = (function() {
 const players = (function(){
     let playerList = [];
 
+    const playerIconHTML = {
+        x: `<i class="fas fa-times"></i>`,
+        o: `<i class="far fa-circle"></i>`,
+        heart: `<i class="far fa-heart"></i>`,
+        cowboy: `<i class="fas fa-hat-cowboy-side"></i>`,
+    }
+
     let activePlayer = playerList[0]
 
     const getActive = function() {
@@ -53,7 +60,12 @@ const players = (function(){
     const makePlayer = function(name, token) {
         playerList.push({name, token})
     }
-    return {switchActive, makePlayer, getActive, playerList}
+
+    const returnActiveTokenIcon = function () {
+
+    }
+
+    return {switchActive, makePlayer, getActive, returnActiveTokenIcon, playerList}
 })()
 
 //
@@ -90,7 +102,7 @@ const gameController = (function() {
         }
         else {
             let filledNode = document.createElement("div");
-            filledNode.textContent = el
+            filledNode.textContent = players.playerIconHTML[(players.getActive().token)]
             appendNodeToContainer(filledNode, boardContainer, indexInArray);
         }
 
