@@ -6,11 +6,34 @@ const makePlayer = function(name, token) {
     return {playerName, playerToken}
 }
 
-// form entry
+// form entry. Horrifying, but will refactor later when I can actually submit a backend POST
 
 const playerForm = (function(){
     const resetForm = function (){}
-    const submitForm = function (){}
+    const submitForm = function (){
+        const player1name = document.querySelector("#player1Name").value
+        const token1Values = document.querySelectorAll("#player1icon [name=iconOptions]")
+        const player2name = document.querySelector("#player2Name").value
+        const token2Values = document.querySelectorAll("#player2icon [name=iconOptions]")
+        let token1Value = ""
+        let token2Value = ""
+        for (let i = 0; i < token1Values.length; i++) {
+            if (token1Values[i].checked) {
+                token1Value = token1Values[i].value
+                break;
+            }
+        }
+        for (let i = 0; i < token2Values.length; i++) {
+            if (token2Values[i].checked) {
+                token2Value = token2Values[i].value
+                break;
+            }
+        }
+        players.makePlayer(player1name, token1Value)
+        players.makePlayer(player2name, token2Value)
+    }
+    
+    return{submitForm, resetForm}
 })()
 
 // gameBoard module 
@@ -32,6 +55,10 @@ const gameBoard = (function() {
 //Player creation and active player control 
 
 const players = (function(){
+
+    // let playerT = {name: "Thomas", token: "x"}
+    // let playerZ = {name: "T Bro", token: "o"}
+
     let playerList = [];
 
     const playerIconHTML = {
@@ -41,9 +68,14 @@ const players = (function(){
         cowboy: `<i class="fas fa-hat-cowboy-side"></i>`,
     }
 
-    let activePlayer = playerList[0]
+    const getPlayerList = function() {
+        return playerList
+    }
+
+    let activePlayer = playerList[0];
 
     const getActive = function() {
+        let activePlayer = playerList[0];
         return activePlayer
     }
 
@@ -65,7 +97,7 @@ const players = (function(){
 
     }
 
-    return {switchActive, makePlayer, getActive, returnActiveTokenIcon, playerList}
+    return {switchActive, makePlayer, getActive, returnActiveTokenIcon, getPlayerList}
 })()
 
 //
@@ -102,7 +134,7 @@ const gameController = (function() {
         }
         else {
             let filledNode = document.createElement("div");
-            filledNode.textContent = players.playerIconHTML[(players.getActive().token)]
+            filledNode.textContent = "Clicken"
             appendNodeToContainer(filledNode, boardContainer, indexInArray);
         }
 
@@ -117,12 +149,15 @@ const gameController = (function() {
 
     const addListener = function(node) {
         const selectedSquare = node.getAttribute("data-square");
-        node.addEventListener("click", gameBoard.addMove.bind(gameBoard, selectedSquare));
+        node.addEventListener("click", gameBoard.addMove.bind(players, selectedSquare));
     }
 
+    // event liseners for main form 
+
+    const startGameButton = document.querySelector("button");
+    startGameButton.addEventListener("click", playerForm.submitForm);
 
     return {renderBoard}
 })()
 
 gameController.renderBoard()
-
