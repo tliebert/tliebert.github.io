@@ -4,18 +4,33 @@
     <body>
         <div id="scoreboard" class="scoreboard">
             <h1>Tic Tac Toe</h1>
-            <div class="player">
-                <div>Human / Robot</div>
-                <input type="checkbox" name="" id="">
-                <input type="text" name="" id="">
+            <div class="playerBox">
+                <h1>Player 1</h1>
+                <div>
+                    <form for="iconOptions" action="" class="iconOptions" id="player1submit">
+                        <input type="radio" name="iconOptions" value="x">
+                        <input type="radio" name="iconOptions" value="o">
+                        <input type="radio" name="iconOptions" value="heart">
+                        <input type="radio" name="iconOptions" value="diamond">
+                    </form>
+                </div>
+                
+                <input type="text" name="" id="playerName" placeholder="Player Name" required>
             </div>
-            <div class="player">
-                <div>Human / Robot</div>
-                <input type="checkbox" name="" id="">
-                <input type="text" name="" id="">
+            <div class="playerBox">
+                <h1>Player 2</h1>
+
+                <div>
+                    <form for="iconOptions" action="" class="iconOptions" id="player2submit">
+                        <input type="radio" name="iconOptions" value="x" >
+                        <input type="radio" name="iconOptions" value="o">
+                        <input type="radio" name="iconOptions" value="heart">
+                        <input type="radio" name="iconOptions" value="diamond">
+                    </form>
+                </div>
+                <input type="text" name="" id="playerName" placeholder="Player Name" required>
             </div>
             <button>Start Game</button>
-            <input type="text" name="" id="playerName" placeholder="Please Enter Your Name">
         </div>
         <div id="boardContainer" class="boardGrid"></div>
     </body>

@@ -6,7 +6,7 @@
 .boardGrid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-column-gap: 1px;
+    grid-column-gap: 5px;
     grid-row-gap: 5px;
     width: 50vw;
     height: 50vw;
@@ -16,5 +16,10 @@
 }
 
 .scoreboard {
-    
+    display: flex;
+}
+
+.playerBox {
+    display: flex; 
+    flex-direction: column;
 }

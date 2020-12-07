@@ -6,6 +6,13 @@ const makePlayer = function(name, token) {
     return {playerName, playerToken}
 }
 
+// form entry
+
+const playerForm = (function(){
+    const resetForm = function (){}
+    const submitForm = function (){}
+})()
+
 // gameBoard module 
 
 const gameBoard = (function() {
@@ -23,7 +30,6 @@ const gameBoard = (function() {
 })()
 
 //Player creation and active player control 
-
 
 const players = (function(){
     let playerList = [];
@@ -50,6 +56,15 @@ const players = (function(){
     return {switchActive, makePlayer, getActive, playerList}
 })()
 
+//
+
+const scoreboard = (function() {
+    const textInputs = document.querySelectorAll('input')
+    return {
+        textInputs
+    }
+    
+})()
 
 // main game controller 
 
