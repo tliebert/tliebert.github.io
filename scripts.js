@@ -41,14 +41,22 @@ const playerForm = (function(){
 const gameBoard = (function() {
     let boardArray = Array.from({length:9}, () => undefined);
 
+    const getBoardArray = function() {
+        return boardArray
+    }
+
+    const resetBoard = function() {
+        boardArray = Array.from({length:9}, () => undefined);
+    }
+
     const addMove = function(squareNumber) {
         boardArray[squareNumber] = players.getActive().token;
-        players.switchActive();
         gameController.renderBoard();
+        players.switchActive();
     }
 
     return {
-        boardArray, addMove
+        getBoardArray, addMove, resetBoard
     }
 })()
 
@@ -60,25 +68,27 @@ const players = (function(){
     // let playerZ = {name: "T Bro", token: "o"}
 
     let playerList = [];
+    let activePlayer = playerList[0]
 
-    const playerIconHTML = {
-        x: `<i class="fas fa-times"></i>`,
-        o: `<i class="far fa-circle"></i>`,
-        heart: `<i class="far fa-heart"></i>`,
-        cowboy: `<i class="fas fa-hat-cowboy-side"></i>`,
+    const playerIconClass = {
+        "x": "fas fa-times",
+        "o": "far fa-circle",
+        "heart": "far fa-heart",
+        "cowboy": "fas fa-hat-cowboy-side",
     }
 
     const getPlayerList = function() {
         return playerList
     }
 
-    let activePlayer = playerList[0];
-
     const getActive = function() {
-        let activePlayer = playerList[0];
-        return activePlayer
+        if (!activePlayer) {
+            return playerList[0]
+        }
+        else {
+            return activePlayer
+        }
     }
-
     const switchActive = function(){
         if (activePlayer === playerList[0]) {
             activePlayer = playerList[1];
@@ -93,11 +103,11 @@ const players = (function(){
         playerList.push({name, token})
     }
 
-    const returnActiveTokenIcon = function () {
-
+    const returnActiveTokenClass = function () {
+        return playerIconClass[getActive().token]
     }
 
-    return {switchActive, makePlayer, getActive, returnActiveTokenIcon, getPlayerList}
+    return {switchActive, makePlayer, getActive, returnActiveTokenClass, getPlayerList, playerIconClass}
 })()
 
 //
@@ -118,7 +128,12 @@ const gameController = (function() {
 
     const renderBoard = function(){
         removeChildren(boardContainer)
-        gameBoard.boardArray.forEach(addNode);
+        gameBoard.getBoardArray().forEach(addNode);
+    }
+
+    const resetBoard = function() {
+        gameBoard.resetBoard();
+        renderBoard();
     }
 
     const removeChildren = function(parent) {
@@ -134,7 +149,9 @@ const gameController = (function() {
         }
         else {
             let filledNode = document.createElement("div");
-            filledNode.textContent = "Clicken"
+            let childToAppend = document.createElement("i")
+            childToAppend.setAttribute('class', `${players.playerIconClass[el]}`)
+            filledNode.appendChild(childToAppend);
             appendNodeToContainer(filledNode, boardContainer, indexInArray);
         }
 
@@ -152,12 +169,15 @@ const gameController = (function() {
         node.addEventListener("click", gameBoard.addMove.bind(players, selectedSquare));
     }
 
-    // event liseners for main form 
+    // event listeners for main form - initializes the render on click. 
 
-    const startGameButton = document.querySelector("button");
+    const startGameButton = document.querySelector("button#start");
+    const resetButton = document.querySelector("button#reset")
+
     startGameButton.addEventListener("click", playerForm.submitForm);
+    startGameButton.addEventListener("click", renderBoard)
+    
+    resetButton.addEventListener("click", resetBoard)
 
     return {renderBoard}
 })()
-
-gameController.renderBoard()

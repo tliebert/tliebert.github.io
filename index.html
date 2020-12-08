@@ -6,61 +6,63 @@
     </head>
     
     <body>
-        <div id="scoreboard" class="scoreboard">
-            <h1>Tic Tac Toe</h1>
-            <div class="playerBox">
-                <h1>Player 1</h1>
-                <div>
-                    <form for="iconOptions" action="" class="iconOptions" id="player1icon">
-                        <label for="">
-                            <i class="fas fa-times"></i>
-                            <input type="radio" name="iconOptions" value="x">
-                        </label>
-                        <label for="">
-                            <i class="far fa-circle"></i>
-                            <input type="radio" name="iconOptions" value="o">
-                        </label>
-                        <label for="">
-                            <i class="far fa-heart"></i>
-                            <input type="radio" name="iconOptions" value="heart">
-                        </label>
-                        <label for="">
-                            <i class="fas fa-hat-cowboy-side"></i>
-                            <input type="radio" name="iconOptions" value="cowboy">
-                        </label>
-                    </form>
-                </div>
+        <div id="gamespaceContainer">
+            <div id="scoreboard" class="scoreboard">
+                <div class="playerBox">
+                    <h1>Player 1</h1>
+                    <div>
+                        <form for="iconOptions" action="" class="iconOptions" id="player1icon">
+                            <label for="">
+                                <i class="fas fa-times"></i>
+                                <input type="radio" name="iconOptions" value="x">
+                            </label>
+                            <label for="">
+                                <i class="far fa-circle"></i>
+                                <input type="radio" name="iconOptions" value="o">
+                            </label>
+                            <label for="">
+                                <i class="far fa-heart"></i>
+                                <input type="radio" name="iconOptions" value="heart">
+                            </label>
+                            <label for="">
+                                <i class="fas fa-hat-cowboy-side"></i>
+                                <input type="radio" name="iconOptions" value="cowboy">
+                            </label>
+                        </form>
+                    </div>
 
-                
-                <input type="text" name="" id="player1Name" placeholder="Player Name" required>
-            </div>
-            <div class="playerBox">
-                <h1>Player 2</h1>
-                <div>
-                    <form action="" id="player2icon">
-                        <label for="">
-                            <i class="fas fa-times"></i>
-                            <input type="radio" name="iconOptions" value="x">
-                        </label>
-                        <label for="">
-                            <i class="far fa-circle"></i>
-                            <input type="radio" name="iconOptions" value="o">
-                        </label>
-                        <label for="">
-                            <i class="far fa-heart"></i>
-                            <input type="radio" name="iconOptions" value="heart">
-                        </label>
-                        <label for="">
-                            <i class="fas fa-hat-cowboy-side"></i>
-                            <input type="radio" name="iconOptions" value="diamond">
-                        </label>
-                    </form>
+                    
+                    <input type="text" name="" id="player1Name" placeholder="Player Name" required>
                 </div>
-                <input type="text" name="" id="player2Name" placeholder="Player Name" required>
+                <div class="playerBox">
+                    <h1>Player 2</h1>
+                    <div>
+                        <form action="" id="player2icon">
+                            <label for="">
+                                <i class="fas fa-times"></i>
+                                <input type="radio" name="iconOptions" value="x">
+                            </label>
+                            <label for="">
+                                <i class="far fa-circle"></i>
+                                <input type="radio" name="iconOptions" value="o">
+                            </label>
+                            <label for="">
+                                <i class="far fa-heart"></i>
+                                <input type="radio" name="iconOptions" value="heart">
+                            </label>
+                            <label for="">
+                                <i class="fas fa-hat-cowboy-side"></i>
+                                <input type="radio" name="iconOptions" value="cowboy">
+                            </label>
+                        </form>
+                    </div>
+                    <input type="text" name="" id="player2Name" placeholder="Player Name" required>
+                </div>
+                <button id="start">Start Game</button>
+                <button id="reset">Reset </button>
             </div>
-            <button>Start Game</button>
+            <div id="boardContainer" class="boardGrid"></div>
         </div>
-        <div id="boardContainer" class="boardGrid"></div>
     </body>
     <script src="scripts.js"></script>
 </html>

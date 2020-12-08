@@ -23,3 +23,10 @@
     display: flex; 
     flex-direction: column;
 }
+
+#gamespaceContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
