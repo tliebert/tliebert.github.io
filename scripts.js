@@ -6,7 +6,7 @@ const makePlayer = function(name, token) {
     return {playerName, playerToken}
 }
 
-// form entry. Horrifying, but will refactor later when I can actually submit a backend POST
+// form entry. 
 
 const playerForm = (function(){
     const resetForm = function (){}
@@ -55,17 +55,56 @@ const gameBoard = (function() {
         players.switchActive();
     }
 
+    const checkWin = function(array) {
+        let playerMoves = {}
+        let winningPlayer = ""
+        const parser = function(token, currInd) {
+            if (token in playerMoves) {
+                playerMoves[token].push(currInd.toString())
+            }
+            else if (token) {
+                playerMoves[token] = []
+                playerMoves[token].push(currInd.toString())
+            }
+        }
+
+        boardArray.forEach(parser)
+
+        const winningCombos = [
+            "012",
+            "345",
+            "678",
+            "036",
+            "147",
+            "258",
+            "048",
+            "246"
+        ]
+
+
+        for (key in playerMoves) {
+            const moveFunct = function (winningSquareCombo) {
+                let comboArray = winningSquareCombo.split("")
+                if (comboArray.every(sqr => playerMoves[key].includes(sqr))) {
+                    console.log("winner winner")
+                    winningPlayer = key;
+                }
+            }
+            winningCombos.forEach(moveFunct)
+        }
+
+        return winningPlayer
+
+    }
+
     return {
-        getBoardArray, addMove, resetBoard
+        getBoardArray, addMove, resetBoard, checkWin
     }
 })()
 
 //Player creation and active player control 
 
 const players = (function(){
-
-    // let playerT = {name: "Thomas", token: "x"}
-    // let playerZ = {name: "T Bro", token: "o"}
 
     let playerList = [];
     let activePlayer = playerList[0]
@@ -146,6 +185,7 @@ const gameController = (function() {
         if (!el) {
             let emptyNode = document.createElement("div");
             appendNodeToContainer(emptyNode, boardContainer, indexInArray)
+            addListener(emptyNode);
         }
         else {
             let filledNode = document.createElement("div");
@@ -160,7 +200,6 @@ const gameController = (function() {
     const appendNodeToContainer = function(node, container, index) {
         node.setAttribute("data-square", index);
         node.classList.add("squareBox");
-        addListener(node);
         container.appendChild(node);
     }
 
