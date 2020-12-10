@@ -9,31 +9,54 @@ const makePlayer = function(name, token) {
 // form entry. 
 
 const playerForm = (function(){
+
     const resetForm = function (){}
-    const submitForm = function (){
+
+    const checkInputsAndSubmit = function() {
+
         const player1name = document.querySelector("#player1Name").value
         const token1Values = document.querySelectorAll("#player1icon [name=iconOptions]")
         const player2name = document.querySelector("#player2Name").value
-        const token2Values = document.querySelectorAll("#player2icon [name=iconOptions]")
+        const token2Values = document.querySelectorAll("#player2icon [name=iconOptions]")        
+        const player1header = document.getElementById("player1header")
+        const player2header = document.getElementById("player2header")
+
         let token1Value = ""
         let token2Value = ""
+
         for (let i = 0; i < token1Values.length; i++) {
             if (token1Values[i].checked) {
                 token1Value = token1Values[i].value
                 break;
             }
         }
+
         for (let i = 0; i < token2Values.length; i++) {
             if (token2Values[i].checked) {
                 token2Value = token2Values[i].value
                 break;
             }
         }
-        players.makePlayer(player1name, token1Value)
-        players.makePlayer(player2name, token2Value)
+
+        if (token1Value === token2Value) {
+            alert("please select different tokens")
+        }
+
+        else if (!player1name || !player2name) {
+            alert("please enter a real name!")
+        }
+
+        else {
+            players.makePlayer(player1name, token1Value)
+            players.makePlayer(player2name, token2Value)
+            player1header.textContent = player1name;
+            player2header.textContent = player2name;
+
+        }
+
     }
     
-    return{submitForm, resetForm}
+    return{checkInputsAndSubmit, resetForm}
 })()
 
 // gameBoard module 
@@ -55,9 +78,11 @@ const gameBoard = (function() {
         players.switchActive();
     }
 
-    const checkWin = function(array) {
+    const checkWin = function() {
+
         let playerMoves = {}
         let winningPlayer = ""
+
         const parser = function(token, currInd) {
             if (token in playerMoves) {
                 playerMoves[token].push(currInd.toString())
@@ -86,7 +111,6 @@ const gameBoard = (function() {
             const moveFunct = function (winningSquareCombo) {
                 let comboArray = winningSquareCombo.split("")
                 if (comboArray.every(sqr => playerMoves[key].includes(sqr))) {
-                    console.log("winner winner")
                     winningPlayer = key;
                 }
             }
@@ -181,6 +205,24 @@ const gameController = (function() {
         }
     }
 
+    const removeInputs = function() {
+        const form1 = document.getElementById("form1container");
+        const form2 = document.getElementById("form2container");
+        player1token = players.playerIconClass[players.getPlayerList()[0].token]
+        player2token = players.playerIconClass[players.getPlayerList()[1].token]
+        let child1ToAppend = document.createElement("i")
+        let child2ToAppend = document.createElement("i")
+        removeChildren(form1)
+        removeChildren(form2)
+        form1.appendChild(child1ToAppend)
+        form2.appendChild(child2ToAppend)
+        child1ToAppend.setAttribute('class', `${player1token}`)
+        child2ToAppend.setAttribute('class', `${player2token}`)
+        document.querySelector("#player1Name").remove()
+        document.querySelector("#player2Name").remove()
+
+    }
+
     const addNode = function(el, indexInArray) {
         if (!el) {
             let emptyNode = document.createElement("div");
@@ -213,8 +255,9 @@ const gameController = (function() {
     const startGameButton = document.querySelector("button#start");
     const resetButton = document.querySelector("button#reset")
 
-    startGameButton.addEventListener("click", playerForm.submitForm);
+    startGameButton.addEventListener("click", playerForm.checkInputsAndSubmit);
     startGameButton.addEventListener("click", renderBoard)
+    startGameButton.addEventListener("click", removeInputs)
     
     resetButton.addEventListener("click", resetBoard)
 

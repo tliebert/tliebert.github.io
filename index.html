@@ -8,9 +8,9 @@
     <body>
         <div id="gamespaceContainer">
             <div id="scoreboard" class="scoreboard">
-                <div class="playerBox">
-                    <h1>Player 1</h1>
-                    <div>
+                <div class="playerBox scoreboardElement">
+                    <h1 id="player1header">Player 1</h1>
+                    <div id="form1container">
                         <form for="iconOptions" action="" class="iconOptions" id="player1icon">
                             <label for="">
                                 <i class="fas fa-times"></i>
@@ -30,13 +30,11 @@
                             </label>
                         </form>
                     </div>
-
-                    
-                    <input type="text" name="" id="player1Name" placeholder="Player Name" required>
+                    <input type="text" name="" id="player1Name" placeholder="Player Name" maxlength="12" required>
                 </div>
-                <div class="playerBox">
-                    <h1>Player 2</h1>
-                    <div>
+                <div class="playerBox scoreboardElement">
+                    <h1 id="player2header">Player 2</h1>
+                    <div id="form2container">
                         <form action="" id="player2icon">
                             <label for="">
                                 <i class="fas fa-times"></i>
@@ -56,12 +54,14 @@
                             </label>
                         </form>
                     </div>
-                    <input type="text" name="" id="player2Name" placeholder="Player Name" required>
+                    <input type="text" name="" id="player2Name" placeholder="Player Name" maxlength="12" required>
                 </div>
-                <button id="start">Start Game</button>
-                <button id="reset">Reset </button>
+                <button id="start" class= "scoreboardElement">Start Game</button>
+                <button id="New Game" class="scoreboardElement">New Game</button>
+                <button id="reset" class="scoreboardElement">Reset Players</button>
             </div>
-            <div id="boardContainer" class="boardGrid"></div>
+            <div id="boardContainer" class="boardGrid">
+            </div>
         </div>
     </body>
     <script src="scripts.js"></script>

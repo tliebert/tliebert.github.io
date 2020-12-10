@@ -1,6 +1,6 @@
 .squareBox {
-    background-color: red;
     font-size: 50px;
+    background-color: white;
 }
 
 .boardGrid {
@@ -12,16 +12,32 @@
     height: 50vw;
     border-color: black;
     border-style: solid;
-    border-width: 2px;
+    border-width: 5px;
+    box-sizing: border-box;
 }
 
 .scoreboard {
+    display: grid;
+    grid-template-columns: minmax(20%, auto) minmax(20%, auto) 1fr 1fr 1fr;
+    width: 50vw;
+    margin: 5px;
+}
+
+.scoreboardElement {
+    border-color: black;
+    border-style: solid;
+    border-width: 5px 5px 5px 5px;
+    margin-right: 5px;
+    box-sizing: border-box;
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .playerBox {
     display: flex; 
     flex-direction: column;
+    padding: 5px
 }
 
 #gamespaceContainer {
@@ -29,4 +45,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+button {
+    background-color: white;
+    font-size: 2em;
+    font-weight: bolder:
+}
+
+button:hover {
+    color: red;
 }
