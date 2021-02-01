@@ -1,4 +1,4 @@
-//player factory function 
+//player factory function. Duplicate from 
 
 const makePlayer = function(name, token) {
     const playerName = name;
@@ -62,6 +62,7 @@ const playerForm = (function(){
 // gameBoard module 
 
 const gameBoard = (function() {
+
     let boardArray = Array.from({length:9}, () => undefined);
 
     const getBoardArray = function() {
@@ -131,7 +132,32 @@ const gameBoard = (function() {
 const players = (function(){
 
     let playerList = [];
-    let activePlayer = playerList[0]
+
+    const makePlayer = function(name, token) {
+        playerList.push({name, token})
+    }
+
+    // activePlayer / token logic 
+
+    let activePlayer = "x"
+
+    const getPlayerList = function() {
+        return playerList
+    }
+
+    const getActivePlayer = function() {
+            return activePlayer
+    }
+
+    const switchActive = function(){
+        if (activePlayer = "x") {
+            activePlayer = "o"
+        }
+        else {
+            activePlayer = "x"
+        }
+        getActive()
+    };
 
     const playerIconClass = {
         "x": "fas fa-times",
@@ -140,52 +166,12 @@ const players = (function(){
         "cowboy": "fas fa-hat-cowboy-side",
     }
 
-    const getPlayerList = function() {
-        return playerList
-    }
-
-    const getActive = function() {
-        if (!activePlayer) {
-            return playerList[0]
-        }
-        else {
-            return activePlayer
-        }
-    }
-    const switchActive = function(){
-        if (activePlayer === playerList[0]) {
-            activePlayer = playerList[1];
-        }
-        else {
-            activePlayer = playerList[0];
-        }
-        return activePlayer
-    };
-
-    const makePlayer = function(name, token) {
-        playerList.push({name, token})
-    }
-
-    const returnActiveTokenClass = function () {
-        return playerIconClass[getActive().token]
-    }
-
-    return {switchActive, makePlayer, getActive, returnActiveTokenClass, getPlayerList, playerIconClass}
+    return {switchActive, makePlayer, getActivePlayer, getPlayerList}
 })()
 
-//
+// DOM Communication and render logic 
 
-const scoreboard = (function() {
-    const textInputs = document.querySelectorAll('input')
-    return {
-        textInputs
-    }
-    
-})()
-
-// main game controller 
-
-const gameController = (function() {
+const domCommunicator = (function() {
 
     const boardContainer = document.getElementById("boardContainer");
 
@@ -194,15 +180,13 @@ const gameController = (function() {
         gameBoard.getBoardArray().forEach(addNode);
     }
 
-    const resetBoard = function() {
-        gameBoard.resetBoard();
-        renderBoard();
-    }
-
     const removeChildren = function(parent) {
         while (parent.firstChild) {
             parent.removeChild(parent.firstChild)
         }
+    }
+
+    const resetBoard = function() {
     }
 
     const removeInputs = function() {
@@ -245,6 +229,11 @@ const gameController = (function() {
         container.appendChild(node);
     }
 
+
+    function renderBoard(board, playerList) {
+
+    }
+
     const addListener = function(node) {
         const selectedSquare = node.getAttribute("data-square");
         node.addEventListener("click", gameBoard.addMove.bind(players, selectedSquare));
@@ -258,8 +247,25 @@ const gameController = (function() {
     startGameButton.addEventListener("click", playerForm.checkInputsAndSubmit);
     startGameButton.addEventListener("click", renderBoard)
     startGameButton.addEventListener("click", removeInputs)
-    
     resetButton.addEventListener("click", resetBoard)
 
-    return {renderBoard}
+    return {
+        renderBoard
+    }
+})()
+
+// main game controller 
+
+const gameController = (function() {
+
+    function logMove(square) {
+
+    }
+
+    function submitForm() {
+
+    }
+
+
+    return {logMove, submitForm}
 })()
