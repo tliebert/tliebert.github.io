@@ -73,57 +73,12 @@ const gameBoard = (function() {
         boardArray = Array.from({length:9}, () => undefined);
     }
 
-    const addMove = function(squareNumber) {
-        boardArray[squareNumber] = players.getActive().token;
-        gameController.renderBoard();
-        players.switchActive();
-    }
-
-    const checkWin = function() {
-
-        let playerMoves = {}
-        let winningPlayer = ""
-
-        const parser = function(token, currInd) {
-            if (token in playerMoves) {
-                playerMoves[token].push(currInd.toString())
-            }
-            else if (token) {
-                playerMoves[token] = []
-                playerMoves[token].push(currInd.toString())
-            }
-        }
-
-        boardArray.forEach(parser)
-
-        const winningCombos = [
-            "012",
-            "345",
-            "678",
-            "036",
-            "147",
-            "258",
-            "048",
-            "246"
-        ]
-
-
-        for (key in playerMoves) {
-            const moveFunct = function (winningSquareCombo) {
-                let comboArray = winningSquareCombo.split("")
-                if (comboArray.every(sqr => playerMoves[key].includes(sqr))) {
-                    winningPlayer = key;
-                }
-            }
-            winningCombos.forEach(moveFunct)
-        }
-
-        return winningPlayer
-
+    const addMove = function(squareNumber, activeToken) {
+        boardArray[squareNumber] = activeToken;
     }
 
     return {
-        getBoardArray, addMove, resetBoard, checkWin
+        getBoardArray, addMove, resetBoard
     }
 })()
 
@@ -131,19 +86,19 @@ const gameBoard = (function() {
 
 const players = (function(){
 
-    let playerList = [];
-
     const makePlayer = function(name, token) {
         playerList.push({name, token})
+    }
+
+    let playerList = [];
+
+    const getPlayerList = function() {
+        return playerList
     }
 
     // activePlayer / token logic 
 
     let activePlayer = "x"
-
-    const getPlayerList = function() {
-        return playerList
-    }
 
     const getActivePlayer = function() {
             return activePlayer
@@ -166,7 +121,11 @@ const players = (function(){
         "cowboy": "fas fa-hat-cowboy-side",
     }
 
-    return {switchActive, makePlayer, getActivePlayer, getPlayerList}
+    const resetPlayers = function() {
+
+    }
+
+    return {switchActive, makePlayer, getActivePlayer, getPlayerList, resetPlayers}
 })()
 
 // DOM Communication and render logic 
@@ -256,15 +215,81 @@ const domCommunicator = (function() {
 
 // main game controller 
 
+//Dummy test board
+
+let dummyTestBoard = ["x","x","x","o","o",,,,,]
+
+// added to object reducer
+
 const gameController = (function() {
 
     function logMove(square) {
-
+        let activeToken = players.getActivePlayer();
+        gameBoard.addMove(square, activeToken)
     }
 
     function submitForm() {
 
     }
+
+    function resetGame() {
+
+    }
+
+    function getPlayerMoves() {
+        let board = dummyTestBoard
+        return board.reduce((accum, val, index) => {
+            if (accum[val]) {
+                accum[val] += index.toString()
+            }
+            else {
+                accum[val] = index.toString()
+            }
+            console.log(accum)
+            return accum
+            }, {}
+        )
+    }
+                   
+
+    const checkWin = function(board) {
+
+        let playerMoves = getPlayerMoves()
+
+        let winningPlayer = ""
+
+        const winningCombos = [
+            "012",
+            "345",
+            "678",
+            "036",
+            "147",
+            "258",
+            "048",
+            "246"
+        ]
+
+        winningCombos.forEach(checkSingleWinCombo)
+
+        const checkSingleWinCombo = function(combo) {
+            let seq = combo.split("")
+            for (let key in playerMoves) {
+                if (seq.every(num => movesList[key].includes(num))) {
+                    return winningPlayer = key; 
+                }
+                else {
+                    continue 
+                }
+            } 
+        
+        }
+
+        if (winningPlayer) {
+            return winningPlayer
+        }
+
+    }
+
 
 
     return {logMove, submitForm}
