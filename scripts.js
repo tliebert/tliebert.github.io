@@ -134,9 +134,9 @@ const domCommunicator = (function() {
 
     const boardContainer = document.getElementById("boardContainer");
 
-    const renderBoard = function(){
+    const renderBoard = function(board){
         removeChildren(boardContainer)
-        gameBoard.getBoardArray().forEach(addNode);
+        board.forEach(addNode);
     }
 
     const removeChildren = function(parent) {
@@ -163,7 +163,6 @@ const domCommunicator = (function() {
         child2ToAppend.setAttribute('class', `${player2token}`)
         document.querySelector("#player1Name").remove()
         document.querySelector("#player2Name").remove()
-
     }
 
     const addNode = function(el, indexInArray) {
@@ -188,11 +187,6 @@ const domCommunicator = (function() {
         container.appendChild(node);
     }
 
-
-    function renderBoard(board, playerList) {
-
-    }
-
     const addListener = function(node) {
         const selectedSquare = node.getAttribute("data-square");
         node.addEventListener("click", gameBoard.addMove.bind(players, selectedSquare));
@@ -213,14 +207,6 @@ const domCommunicator = (function() {
     }
 })()
 
-// main game controller 
-
-//Dummy test board
-
-let dummyTestBoard = ["x","x","x","o","o",,,,,]
-
-// added to object reducer
-
 const gameController = (function() {
 
     function logMove(square) {
@@ -233,7 +219,7 @@ const gameController = (function() {
     }
 
     function resetGame() {
-
+        // a duck type! "resettable"
     }
 
     function getPlayerMoves() {
@@ -245,13 +231,11 @@ const gameController = (function() {
             else {
                 accum[val] = index.toString()
             }
-            console.log(accum)
             return accum
             }, {}
         )
     }
                    
-
     const checkWin = function(board) {
 
         let playerMoves = getPlayerMoves()
@@ -271,10 +255,10 @@ const gameController = (function() {
 
         winningCombos.forEach(checkSingleWinCombo)
 
-        const checkSingleWinCombo = function(combo) {
+        function checkSingleWinCombo(combo) {
             let seq = combo.split("")
             for (let key in playerMoves) {
-                if (seq.every(num => movesList[key].includes(num))) {
+                if (seq.every(num => playerMoves[key].includes(num))) {
                     return winningPlayer = key; 
                 }
                 else {
@@ -290,7 +274,5 @@ const gameController = (function() {
 
     }
 
-
-
-    return {logMove, submitForm}
+    return {logMove, submitForm, checkWin}
 })()
