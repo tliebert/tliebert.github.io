@@ -113,19 +113,19 @@ const players = (function(){
     }
 
     const returnIconToken = function(databaseToken){
-        let extractedObject = playerList.find(obj => {
-            console.log(obj)
-            for (let key in obj) {
-                console.log(key)
-                if (obj[key] === databaseToken){
-                    console.log("found the key")
-                    return true 
-                }  
-            }
-        })
-        console.log(`extracted ${extractedObject}`)
-        return playerIconClass[extractedObject["token"]]
-    }
+        let extractedObject = playerList.find(player => {
+            for (let key in player) {
+                if (player[key] === databaseToken) {
+                    return true
+                }
+                else {
+                    continue
+                } 
+        }
+    })
+    console.log(`extracted ${extractedObject}`)
+    return playerIconClass[extractedObject["token"]]
+}
 
     const switchActive = function(){
         if (activePlayer === "x") {
@@ -254,7 +254,7 @@ const gameController = (function() {
         domCommunicator.renderBoard()
         let currentBoard = gameBoard.getBoardArray()
         let possibleWinner = checkWin(currentBoard)
-        if (possibleWinner) {
+        if (possibleWinner !== "undefined") {
             console.log("possibleWinner if statement assessed as true")
             domCommunicator.showWinner(possibleWinner)
         }
@@ -274,11 +274,11 @@ const gameController = (function() {
         )
     }
                    
-    const checkWin = function(board) {
+    function checkWin(board) {
 
         let playerMoves = getPlayerMoves(board)
 
-        let winningPlayer = ""
+        let winningPlayer;
 
         const winningCombos = [
             "012",
@@ -309,7 +309,7 @@ const gameController = (function() {
             } 
         
         }
-
+        
         return winningPlayer
 
     }
