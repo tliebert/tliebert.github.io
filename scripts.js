@@ -1,9 +1,10 @@
-//player factory function. Duplicate from 
+//player factory function. Duplicate from Players.makePlayer. 
 
-const makePlayer = function(name, token) {
+const makePlayer = function(name, token, dbt) {
     const playerName = name;
     const playerToken = token;
-    return {playerName, playerToken}
+    const databaseToken = dbt;
+    return {playerName, playerToken, databaseToken}
 }
 
 // form entry. 
@@ -47,8 +48,8 @@ const playerForm = (function(){
         }
 
         else {
-            players.makePlayer(player1name, token1Value)
-            players.makePlayer(player2name, token2Value)
+            players.makePlayer(player1name, token1Value, "x")
+            players.makePlayer(player2name, token2Value, "o")
             player1header.textContent = player1name;
             player2header.textContent = player2name;
 
@@ -86,8 +87,15 @@ const gameBoard = (function() {
 
 const players = (function(){
 
-    const makePlayer = function(name, token) {
-        playerList.push({name, token})
+    const playerIconClass = {
+        "x": "fas fa-times",
+        "o": "far fa-circle",
+        "heart": "far fa-heart",
+        "cowboy": "fas fa-hat-cowboy-side",
+    }
+
+    const makePlayer = function(name, token, dbt) {
+        playerList.push({name, token, dbt})
     }
 
     let playerList = [];
@@ -104,28 +112,36 @@ const players = (function(){
             return activePlayer
     }
 
+    const returnIconToken = function(databaseToken){
+        let extractedObject = playerList.find(obj => {
+            console.log(obj)
+            for (let key in obj) {
+                console.log(key)
+                if (obj[key] === databaseToken){
+                    console.log("found the key")
+                    return true 
+                }  
+            }
+        })
+        console.log(`extracted ${extractedObject}`)
+        return playerIconClass[extractedObject["token"]]
+    }
+
     const switchActive = function(){
-        if (activePlayer = "x") {
+        if (activePlayer === "x") {
             activePlayer = "o"
         }
         else {
             activePlayer = "x"
         }
-        getActive()
+        console.log(`now active player is ${activePlayer}`)
     };
-
-    const playerIconClass = {
-        "x": "fas fa-times",
-        "o": "far fa-circle",
-        "heart": "far fa-heart",
-        "cowboy": "fas fa-hat-cowboy-side",
-    }
 
     const resetPlayers = function() {
 
     }
 
-    return {switchActive, makePlayer, getActivePlayer, getPlayerList, resetPlayers}
+    return {switchActive, makePlayer, getActivePlayer, getPlayerList, resetPlayers, returnIconToken, playerIconClass}
 })()
 
 // DOM Communication and render logic 
@@ -134,9 +150,28 @@ const domCommunicator = (function() {
 
     const boardContainer = document.getElementById("boardContainer");
 
-    const renderBoard = function(board){
+    function addNode(el, indexInArray) {
+        if (!el) {
+            let emptyNode = document.createElement("div");
+            appendNodeToContainer(emptyNode, boardContainer, indexInArray)
+            addListener(emptyNode);
+        }
+        else {
+            let filledNode = document.createElement("div");
+            let childToAppend = document.createElement("i")
+            let token = players.returnIconToken(el)            
+            childToAppend.setAttribute('class', token)
+            filledNode.appendChild(childToAppend);
+            appendNodeToContainer(filledNode, boardContainer, indexInArray);
+        }
+
+    }
+
+    const renderBoard = function(){
+        board = gameBoard.getBoardArray()
+        console.log(`rendering this board ${board}`)
         removeChildren(boardContainer)
-        board.forEach(addNode);
+        board.forEach(addNode); // wants a board array, implemented as an event listener 
     }
 
     const removeChildren = function(parent) {
@@ -146,11 +181,14 @@ const domCommunicator = (function() {
     }
 
     const resetBoard = function() {
+        gameBoard.resetBoard()
+        renderBoard()
     }
 
     const removeInputs = function() {
         const form1 = document.getElementById("form1container");
         const form2 = document.getElementById("form2container");
+        console.log(players.getPlayerList())
         player1token = players.playerIconClass[players.getPlayerList()[0].token]
         player2token = players.playerIconClass[players.getPlayerList()[1].token]
         let child1ToAppend = document.createElement("i")
@@ -165,65 +203,65 @@ const domCommunicator = (function() {
         document.querySelector("#player2Name").remove()
     }
 
-    const addNode = function(el, indexInArray) {
-        if (!el) {
-            let emptyNode = document.createElement("div");
-            appendNodeToContainer(emptyNode, boardContainer, indexInArray)
-            addListener(emptyNode);
-        }
-        else {
-            let filledNode = document.createElement("div");
-            let childToAppend = document.createElement("i")
-            childToAppend.setAttribute('class', `${players.playerIconClass[el]}`)
-            filledNode.appendChild(childToAppend);
-            appendNodeToContainer(filledNode, boardContainer, indexInArray);
-        }
-
-    }
-
     const appendNodeToContainer = function(node, container, index) {
-        node.setAttribute("data-square", index);
         node.classList.add("squareBox");
+        node.setAttribute("data-square", index)
         container.appendChild(node);
     }
 
-    const addListener = function(node) {
-        const selectedSquare = node.getAttribute("data-square");
-        node.addEventListener("click", gameBoard.addMove.bind(players, selectedSquare));
+    function addListener(node) {
+        node.addEventListener("click", squareClickProcessor);
+    }
+
+    function squareClickProcessor(event) {
+        let squareNumber = event.target.getAttribute("data-square")
+        console.log(`clicked square is ${squareNumber}`)
+        gameController.logMove(squareNumber)
+    }
+
+    function showWinner(winnerDatabaseToken) {
+        resetBoard()
+        let winMessage = document.createElement("i");
+        let winnerToken = players.returnIconToken(winnerDatabaseToken)
+        winMessage.classList.add(`${players.playerIconClass[winnerToken]}`)
+        winMessage.classList.add("winMessageBox")
+        boardContainer.appendChild(winMessage)
+        console.log("im trying to show the winner!")
     }
 
     // event listeners for main form - initializes the render on click. 
 
     const startGameButton = document.querySelector("button#start");
-    const resetButton = document.querySelector("button#reset")
+    const newGameButton = document.querySelector("button#newgame")
 
     startGameButton.addEventListener("click", playerForm.checkInputsAndSubmit);
     startGameButton.addEventListener("click", renderBoard)
     startGameButton.addEventListener("click", removeInputs)
-    resetButton.addEventListener("click", resetBoard)
+    newGameButton.addEventListener("click", resetBoard)
 
     return {
-        renderBoard
+        renderBoard, showWinner
     }
 })()
+
+let dummyTestBoard = ["x","x","x","x","x","x","x","x","x"]
 
 const gameController = (function() {
 
     function logMove(square) {
         let activeToken = players.getActivePlayer();
         gameBoard.addMove(square, activeToken)
+        domCommunicator.renderBoard()
+        let currentBoard = gameBoard.getBoardArray()
+        let possibleWinner = checkWin(currentBoard)
+        if (possibleWinner) {
+            console.log("possibleWinner if statement assessed as true")
+            domCommunicator.showWinner(possibleWinner)
+        }
+        players.switchActive()
     }
 
-    function submitForm() {
-
-    }
-
-    function resetGame() {
-        // a duck type! "resettable"
-    }
-
-    function getPlayerMoves() {
-        let board = dummyTestBoard
+    function getPlayerMoves(board) {
         return board.reduce((accum, val, index) => {
             if (accum[val]) {
                 accum[val] += index.toString()
@@ -238,7 +276,7 @@ const gameController = (function() {
                    
     const checkWin = function(board) {
 
-        let playerMoves = getPlayerMoves()
+        let playerMoves = getPlayerMoves(board)
 
         let winningPlayer = ""
 
@@ -255,11 +293,15 @@ const gameController = (function() {
 
         winningCombos.forEach(checkSingleWinCombo)
 
+        // takes each combo, splits into an array, then takes each 
+        // key in player moves, an object defined above which collects
+        // every number from x or o player in a single object property 
+
         function checkSingleWinCombo(combo) {
             let seq = combo.split("")
             for (let key in playerMoves) {
                 if (seq.every(num => playerMoves[key].includes(num))) {
-                    return winningPlayer = key; 
+                    winningPlayer = key;
                 }
                 else {
                     continue 
@@ -268,11 +310,9 @@ const gameController = (function() {
         
         }
 
-        if (winningPlayer) {
-            return winningPlayer
-        }
+        return winningPlayer
 
     }
 
-    return {logMove, submitForm, checkWin}
+    return {logMove, checkWin, getPlayerMoves}
 })()
