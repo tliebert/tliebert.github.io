@@ -220,12 +220,14 @@ const domCommunicator = (function() {
     }
 
     function showWinner(winnerDatabaseToken) {
-        resetBoard()
+        let winMessageContainer = document.createElement("div")
+        winMessageContainer.textContent = "hey you won hello yes" 
         let winMessage = document.createElement("i");
         let winnerToken = players.returnIconToken(winnerDatabaseToken)
         winMessage.classList.add(`${players.playerIconClass[winnerToken]}`)
         winMessage.classList.add("winMessageBox")
-        boardContainer.appendChild(winMessage)
+        winMessageContainer.appendChild(winMessage)
+        boardContainer.appendChild(winMessageContainer)
         console.log("im trying to show the winner!")
     }
 
@@ -254,8 +256,9 @@ const gameController = (function() {
         domCommunicator.renderBoard()
         let currentBoard = gameBoard.getBoardArray()
         let possibleWinner = checkWin(currentBoard)
-        if (possibleWinner !== "undefined") {
-            console.log("possibleWinner if statement assessed as true")
+        console.log(typeof possibleWinner)
+        if (!(typeof possibleWinner === "undefined" || possibleWinner === "undefined")) {
+            console.log(`posssiblewinner sending domcommunicator.showWinner this: ${possibleWinner}`)
             domCommunicator.showWinner(possibleWinner)
         }
         players.switchActive()
@@ -301,6 +304,7 @@ const gameController = (function() {
             let seq = combo.split("")
             for (let key in playerMoves) {
                 if (seq.every(num => playerMoves[key].includes(num))) {
+                    console.log("winningplayer updated to", key, typeof key)
                     winningPlayer = key;
                 }
                 else {
@@ -309,7 +313,9 @@ const gameController = (function() {
             } 
         
         }
-        
+
+        //this keeps sending a string that says undefined 
+
         return winningPlayer
 
     }
