@@ -223,11 +223,18 @@ const domCommunicator = (function() {
         let winMessageContainer = document.createElement("div")
         winMessageContainer.textContent = "hey you won hello yes" 
         let winMessage = document.createElement("i");
+
+        //Dry this out. This function happens elsewhere
+        console.log(winnerDatabaseToken)
         let winnerToken = players.returnIconToken(winnerDatabaseToken)
-        winMessage.classList.add(`${players.playerIconClass[winnerToken]}`)
-        winMessage.classList.add("winMessageBox")
+        console.log(winnerToken)
+        winMessage.className += winnerToken;
+        // take either the database token or the winner token. 
+
         winMessageContainer.appendChild(winMessage)
-        boardContainer.appendChild(winMessageContainer)
+
+        let winbox = document.querySelector("#winMessageBox")
+        winbox.appendChild(winMessageContainer)
         console.log("im trying to show the winner!")
     }
 
@@ -256,9 +263,7 @@ const gameController = (function() {
         domCommunicator.renderBoard()
         let currentBoard = gameBoard.getBoardArray()
         let possibleWinner = checkWin(currentBoard)
-        console.log(typeof possibleWinner)
         if (!(typeof possibleWinner === "undefined" || possibleWinner === "undefined")) {
-            console.log(`posssiblewinner sending domcommunicator.showWinner this: ${possibleWinner}`)
             domCommunicator.showWinner(possibleWinner)
         }
         players.switchActive()
@@ -285,16 +290,16 @@ const gameController = (function() {
 
         const winningCombos = [
             "012",
+            "036",
             "345",
             "678",
-            "036",
             "147",
             "258",
             "048",
             "246"
         ]
 
-        winningCombos.forEach(checkSingleWinCombo)
+        winningCombos.some(checkSingleWinCombo)
 
         // takes each combo, splits into an array, then takes each 
         // key in player moves, an object defined above which collects
@@ -303,18 +308,23 @@ const gameController = (function() {
         function checkSingleWinCombo(combo) {
             let seq = combo.split("")
             for (let key in playerMoves) {
+
+                // this can be shortened 
+                
                 if (seq.every(num => playerMoves[key].includes(num))) {
                     console.log("winningplayer updated to", key, typeof key)
                     winningPlayer = key;
+                    return true; 
                 }
+
+                //is this necessary? 
+
                 else {
                     continue 
                 }
             } 
         
         }
-
-        //this keeps sending a string that says undefined 
 
         return winningPlayer
 

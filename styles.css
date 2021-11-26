@@ -56,3 +56,10 @@ button {
 button:hover {
     color: red;
 }
+
+.winbox {
+    border: 1px solid tomato; 
+    width: 100%;
+    height: 50px; 
+}
+
