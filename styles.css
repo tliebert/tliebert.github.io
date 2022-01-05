@@ -3,15 +3,13 @@
 .squareBox {
     font-size: 50px;
     background-color: white;
-    border: 2px solid green;
+    border: 5px solid black;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 i {
-    display: flex;
-    flex-basis: auto;
 }
 
 .boardGrid {
@@ -75,7 +73,31 @@ button:hover {
 
 .winbox {
     border: 1px solid tomato; 
-    width: 100%;
+    width: 50vw;
     height: 50px; 
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
 }
 
+.winMessage {
+
+}
+
+label {
+    border: 1px solid Green;
+}
+
+form {
+    display: flex;
+    margin: 5px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+#form1container, #form2container {
+    width: 100%;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}

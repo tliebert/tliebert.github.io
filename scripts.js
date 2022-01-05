@@ -184,6 +184,7 @@ const domCommunicator = (function() {
         // this function should point to the game controller, which will the communicate
         // with gameBoard. 
         gameBoard.resetBoard()
+        removeWinMessage()
         renderBoard()
     }
 
@@ -223,7 +224,8 @@ const domCommunicator = (function() {
 
     function showWinner(winnerDatabaseToken) {
         let winMessageContainer = document.createElement("div")
-        winMessageContainer.textContent = "hey you won hello yes" 
+        winMessageContainer.classList.add("winMessage")
+        winMessageContainer.textContent = "The Winner Is: "
         let winMessage = document.createElement("i");
 
         //Dry this out. This function happens elsewhere
@@ -233,6 +235,7 @@ const domCommunicator = (function() {
         winMessage.className += winnerToken;
         // take either the database token or the winner token. 
 
+
         winMessageContainer.appendChild(winMessage)
 
         let winbox = document.querySelector("#winMessageBox")
@@ -240,6 +243,11 @@ const domCommunicator = (function() {
         console.log("im trying to show the winner!")
 
         removeChildren(boardContainer);
+    }
+
+    function removeWinMessage() {
+        let winbox = document.querySelector("#winMessageBox")
+        removeChildren(winbox)
     }
 
     // event listeners for main form - initializes the render on click. 
