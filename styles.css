@@ -9,8 +9,6 @@
     align-items: center;
 }
 
-i {
-}
 
 .boardGrid {
     display: grid;
@@ -35,6 +33,10 @@ i {
 
 input {
     width: 80%;
+}
+
+input[type="radio"] {
+    width: auto;
 }
 
 .scoreboardElement {
@@ -72,27 +74,26 @@ button:hover {
 }
 
 .winbox {
-    border: 1px solid tomato; 
+    border: 5px solid black; 
     width: 50vw;
     height: 50px; 
     font-size: 50px;
     display: flex;
     justify-content: center;
-}
-
-.winMessage {
-
+    margin: 5px;
 }
 
 label {
-    border: 1px solid Green;
+    border: 2px solid black;
+    display: flex;
+    padding: 5px;
 }
 
 form {
     display: flex;
     margin: 5px;
     width: 100%;
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 
 #form1container, #form2container {

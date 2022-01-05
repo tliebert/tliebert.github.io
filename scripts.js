@@ -113,10 +113,14 @@ const players = (function(){
             return activePlayer
     }
 
+    // [{name: l, token: "o", dbt: "o"}, {name, token "x", dbt. "o"}]
+
     const returnIconToken = function(databaseToken){
         let extractedObject = playerList.find(player => {
             for (let key in player) {
-                if (player[key] === databaseToken) {
+                // the database will look for the first value of "o"
+                // so this function is passsed something and will only return ""
+                if (player[key] === databaseToken && key === "dbt") {
                     return true
                 }
                 else {
@@ -124,6 +128,8 @@ const players = (function(){
                 } 
         }
     })
+
+
     return playerIconClass[extractedObject["token"]]
 }
 
@@ -268,8 +274,6 @@ function sendToController(event) {
     gameController.startGameEventHandler(event)
 }
 
-let dummyTestBoard = ["x","x","x","x","x","x","x","x","x"]
-
 const gameController = (function() {
 
     function startGameEventHandler(event) {
@@ -344,13 +348,8 @@ const gameController = (function() {
                     console.log("winningplayer updated to", key, typeof key)
                     winningPlayer = key;
                     return true; 
-                }
-
-                //is this necessary? 
-
-                else {
+                }      
                     continue 
-                }
             } 
         
         }
