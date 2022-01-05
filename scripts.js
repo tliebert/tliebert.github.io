@@ -168,7 +168,7 @@ const domCommunicator = (function() {
     }
 
     const renderBoard = function(){
-        board = gameBoard.getBoardArray()
+        let board = gameBoard.getBoardArray()
         console.log(`rendering this board ${board}`)
         removeChildren(boardContainer)
         board.forEach(addNode); // wants a board array, implemented as an event listener 
@@ -181,6 +181,8 @@ const domCommunicator = (function() {
     }
 
     const resetBoard = function() {
+        // this function should point to the game controller, which will the communicate
+        // with gameBoard. 
         gameBoard.resetBoard()
         renderBoard()
     }
@@ -236,6 +238,8 @@ const domCommunicator = (function() {
         let winbox = document.querySelector("#winMessageBox")
         winbox.appendChild(winMessageContainer)
         console.log("im trying to show the winner!")
+
+        removeChildren(boardContainer);
     }
 
     // event listeners for main form - initializes the render on click. 
@@ -264,7 +268,7 @@ const gameController = (function() {
         let currentBoard = gameBoard.getBoardArray()
         let possibleWinner = checkWin(currentBoard)
         if (!(typeof possibleWinner === "undefined" || possibleWinner === "undefined")) {
-            domCommunicator.showWinner(possibleWinner)
+            domCommunicator.showWinner(possibleWinner);
         }
         players.switchActive()
     }
@@ -274,7 +278,7 @@ const gameController = (function() {
             if (accum[val]) {
                 accum[val] += index.toString()
             }
-            else {
+            else if (val) {
                 accum[val] = index.toString()
             }
             return accum
@@ -285,6 +289,8 @@ const gameController = (function() {
     function checkWin(board) {
 
         let playerMoves = getPlayerMoves(board)
+
+        console.log("player moves is", playerMoves)
 
         let winningPlayer;
 
@@ -309,7 +315,7 @@ const gameController = (function() {
             let seq = combo.split("")
             for (let key in playerMoves) {
 
-                // this can be shortened 
+                // recieving ["0","1", "2"] for example 
                 
                 if (seq.every(num => playerMoves[key].includes(num))) {
                     console.log("winningplayer updated to", key, typeof key)

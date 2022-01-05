@@ -30,7 +30,7 @@ i {
 
 .scoreboard {
     display: grid;
-    grid-template-columns: minmax(20%, auto) minmax(20%, auto) 1fr 1fr 1fr;
+    grid-template-columns: minmax(20%, auto) minmax(20%, auto) 1fr 1fr;
     width: 80vw;
     margin: 5px;
 }
