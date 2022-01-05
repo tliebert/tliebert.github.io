@@ -41,10 +41,12 @@ const playerForm = (function(){
 
         if (token1Value === token2Value) {
             alert("please select different tokens")
+            return (false)
         }
 
         else if (!player1name || !player2name) {
             alert("please enter a real name!")
+            return (false)
         }
 
         else {
@@ -52,9 +54,8 @@ const playerForm = (function(){
             players.makePlayer(player2name, token2Value, "o")
             player1header.textContent = player1name;
             player2header.textContent = player2name;
-
+            return true 
         }
-
     }
     
     return{checkInputsAndSubmit, resetForm}
@@ -123,7 +124,6 @@ const players = (function(){
                 } 
         }
     })
-    console.log(`extracted ${extractedObject}`)
     return playerIconClass[extractedObject["token"]]
 }
 
@@ -247,19 +247,34 @@ const domCommunicator = (function() {
     const startGameButton = document.querySelector("button#start");
     const newGameButton = document.querySelector("button#newgame")
 
-    startGameButton.addEventListener("click", playerForm.checkInputsAndSubmit);
-    startGameButton.addEventListener("click", renderBoard)
-    startGameButton.addEventListener("click", removeInputs)
+    startGameButton.addEventListener("click", sendToController)
     newGameButton.addEventListener("click", resetBoard)
 
     return {
-        renderBoard, showWinner
+        renderBoard, showWinner, removeInputs
     }
 })()
+
+function sendToController(event) {
+    console.log(event)
+    gameController.startGameEventHandler(event)
+}
 
 let dummyTestBoard = ["x","x","x","x","x","x","x","x","x"]
 
 const gameController = (function() {
+
+    function startGameEventHandler(event) {
+        let resultOfSubmissionAttempt = playerForm.checkInputsAndSubmit(event)
+        console.log(resultOfSubmissionAttempt)
+        if (resultOfSubmissionAttempt) {
+            domCommunicator.renderBoard()
+            domCommunicator.removeInputs()
+        }
+        else {
+            alert("you need to not mess up the inputs")
+        }
+    }
 
     function logMove(square) {
         let activeToken = players.getActivePlayer();
@@ -336,5 +351,5 @@ const gameController = (function() {
 
     }
 
-    return {logMove, checkWin, getPlayerMoves}
+    return {logMove, checkWin, getPlayerMoves, startGameEventHandler}
 })()
